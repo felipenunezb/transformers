@@ -226,5 +226,5 @@ class LayoutLMv2FeatureExtractor(FeatureExtractionMixin, ImageFeatureExtractionM
         if self.apply_ocr:
             encoded_inputs["words"] = words_batch
             encoded_inputs["boxes"] = boxes_batch
-
+        print('k')
         return encoded_inputs
