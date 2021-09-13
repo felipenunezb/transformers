@@ -170,15 +170,21 @@ class LayoutLMv2Processor:
                 "if you initialized the feature extractor with apply_ocr set to True."
             )
 
+        print('a1')
         # first, apply the feature extractor
         features = self.feature_extractor(images=images, return_tensors=return_tensors)
 
+        print('a2')
         # second, apply the tokenizer
         if text is not None and self.feature_extractor.apply_ocr and text_pair is None:
+            print('b1')
             if isinstance(text, str):
                 text = [text]  # add batch dimension (as the feature extractor always adds a batch dimension)
+            print('b2')
             text_pair = features["words"]
+            
 
+        print('a3')
         encoded_inputs = self.tokenizer(
             text=text if text is not None else features["words"],
             text_pair=text_pair if text_pair is not None else None,
@@ -200,8 +206,10 @@ class LayoutLMv2Processor:
             return_tensors=return_tensors,
             **kwargs,
         )
+        print('a4')
 
         # add pixel values
         encoded_inputs["image"] = features.pop("pixel_values")
+        print('a5')
 
         return encoded_inputs
