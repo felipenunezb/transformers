@@ -168,7 +168,7 @@ class LayoutLMv2FeatureExtractor(FeatureExtractionMixin, ImageFeatureExtractionM
             >>> print(encoding.keys())
             >>> # dict_keys(['pixel_values'])
         """
-
+        print('a')
         # Input type checking for clearer error
         valid_images = False
 
@@ -179,6 +179,7 @@ class LayoutLMv2FeatureExtractor(FeatureExtractionMixin, ImageFeatureExtractionM
             if len(images) == 0 or isinstance(images[0], (Image.Image, np.ndarray)) or is_torch_tensor(images[0]):
                 valid_images = True
 
+        print('b')
         if not valid_images:
             raise ValueError(
                 "Images must of type `PIL.Image.Image`, `np.ndarray` or `torch.Tensor` (single example),"
@@ -186,6 +187,7 @@ class LayoutLMv2FeatureExtractor(FeatureExtractionMixin, ImageFeatureExtractionM
                 f"but is of type {type(images)}."
             )
 
+        print('c')
         is_batched = bool(
             isinstance(images, (list, tuple))
             and (isinstance(images[0], (Image.Image, np.ndarray)) or is_torch_tensor(images[0]))
@@ -194,6 +196,7 @@ class LayoutLMv2FeatureExtractor(FeatureExtractionMixin, ImageFeatureExtractionM
         if not is_batched:
             images = [images]
 
+        print('d')
         # Tesseract OCR to get words + normalized bounding boxes
         if self.apply_ocr:
             words_batch = []
@@ -203,17 +206,22 @@ class LayoutLMv2FeatureExtractor(FeatureExtractionMixin, ImageFeatureExtractionM
                 words_batch.append(words)
                 boxes_batch.append(boxes)
 
+        print('e')
         # transformations (resizing)
         if self.do_resize and self.size is not None:
             images = [self.resize(image=image, size=self.size, resample=self.resample) for image in images]
-
+        print('f')
         images = [self.to_numpy_array(image, rescale=False) for image in images]
+        print('g')
         # flip color channels from RGB to BGR (as Detectron2 requires this)
         images = [image[::-1, :, :] for image in images]
+        print('h')
 
         # return as BatchFeature
         data = {"pixel_values": images}
+        print('i')
         encoded_inputs = BatchFeature(data=data, tensor_type=return_tensors)
+        print('j')
 
         if self.apply_ocr:
             encoded_inputs["words"] = words_batch
